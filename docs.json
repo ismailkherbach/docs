@@ -21,11 +21,15 @@
               "models"
             ]
           },
+          
           {
-            "group": "Customization",
+            "group": "Capabilities",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "capabilities/tetx-to-speech",
+              "capabilities/speech-to-text",
+              "capabilities/voice-cloning",
+              "capabilities/voice-isolation"
+
             ]
           },
           {
