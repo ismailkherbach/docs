@@ -25,7 +25,7 @@
           {
             "group": "Capabilities",
             "pages": [
-              "capabilities/tetx-to-speech",
+              "capabilities/text-to-speech",
               "capabilities/speech-to-text",
               "capabilities/voice-cloning",
               "capabilities/voice-isolation"
