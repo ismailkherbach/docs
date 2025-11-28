@@ -1,0 +1,6 @@
+/* Remove max-width constraint from layout */
+.max-w-8xl,
+[class*="max-w-8xl"] {
+  max-width: none !important;
+}
+
