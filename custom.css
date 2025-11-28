@@ -1,6 +1,14 @@
-/* Remove max-width constraint from layout */
+/* Remove max-width constraint from layout - comprehensive override */
 .max-w-8xl,
 [class*="max-w-8xl"] {
+  max-width: none !important;
+}
+
+/* Target peer-based selectors used by Mintlify for introduction and other pages */
+.peer.is-not-center ~ [class*="peer-\[\.is-not-center\]\:max-w-8xl"],
+.peer.is-not-custom ~ [class*="peer-\[\.is-not-custom\]\:max-w-8xl"],
+.peer.is-not-center ~ *[class*="max-w-8xl"],
+.peer.is-not-custom ~ *[class*="max-w-8xl"] {
   max-width: none !important;
 }
 
