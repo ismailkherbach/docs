@@ -27,10 +27,86 @@ Or include the API key in the `x-api-key` header during the WebSocket handshake.
 
 ## Authentication
 
-Authentication can be provided via:
+Requires API key authentication. Authentication can be provided via:
 - Query parameter: `?x-api-key=YOUR_API_KEY`
 - Header: `x-api-key: YOUR_API_KEY`
 - In `initConnection` message: `x_api_key` field
+
+## Request
+
+### Query Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `x-api-key` | string | No* | API key for authentication (alternative to header) |
+
+\* Required if not provided via header or in `initConnection` message
+
+### Headers
+
+| Header | Type | Required | Description |
+|--------|------|----------|-------------|
+| `x-api-key` | string | No* | API key for authentication |
+
+\* Required if not provided via query parameter or in `initConnection` message
+
+### InitConnection Message Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | string | Yes | Must be `"initConnection"` |
+| `model_id` | string | Yes | The model identifier to use for generation |
+| `voice_id` | string | Yes | The voice ID to use for synthesis |
+| `voice_settings` | object | No | Voice settings object |
+| `voice_settings.stability` | number | No | Voice stability (0.0 to 1.0). Higher values produce more consistent output. Default: 0.5 |
+| `x_api_key` | string | No* | API key for authentication (alternative to query/header) |
+
+\* Required if not provided via query parameter or header
+
+### Text Message Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | string | Yes | Must be `"text"` |
+| `text` | string | Yes | The Arabic text to append to the buffer |
+| `try_trigger_generation` | boolean | Yes | If `true`, triggers generation immediately after appending text |
+
+### CloseConnection Message Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | string | Yes | Must be `"closeConnection"` |
+
+### Example InitConnection Request
+
+```json
+{
+  "type": "initConnection",
+  "model_id": "MODEL_ID",
+  "voice_id": "VOICE_ID",
+  "voice_settings": {
+    "stability": 0.5
+  }
+}
+```
+
+### Example Text Request
+
+```json
+{
+  "type": "text",
+  "text": "مرحبا بك في فصيح",
+  "try_trigger_generation": true
+}
+```
+
+### Example CloseConnection Request
+
+```json
+{
+  "type": "closeConnection"
+}
+```
 
 ## Message Types
 
