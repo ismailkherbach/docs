@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Faseeh Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#000000",
+    "light": "#ffffff",
+    "dark": "#ffffff"
   },
   "favicon": "/favicon.svg",
   "css": "/custom.css",

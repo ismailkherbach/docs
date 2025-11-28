@@ -12,3 +12,11 @@
   max-width: none !important;
 }
 
+/* Fix text color for Get API Key button only */
+a[href*="api-keys"],
+a[href*="api-keys"] *,
+a[href="https://app.faseeh.ai/en/api-keys"],
+a[href="https://app.faseeh.ai/en/api-keys"] * {
+  color: #000000 !important;
+}
+
