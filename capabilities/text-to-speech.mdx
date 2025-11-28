@@ -17,32 +17,23 @@ The Text-to-Speech API provides three methods for generating speech:
 
 ## Endpoints
 
-### POST /text-to-speech/:model_id
+### POST /text-to-speech/:model_id (Complete Audio)
 
-Generate speech from text using a specific model.
+Generate speech from text and receive a complete WAV file.
 
-**Parameters:**
-- `model_id` (path): The model identifier to use for generation
+<Card title="View Documentation" href="/api-reference/text-to-speech-post">
+  Complete WAV file generation endpoint
+</Card>
 
-**Request Body:**
-```json
-{
-  "voice_id": "string",
-  "text": "string",
-  "stability": 0.5,
-  "streaming": true
-}
-```
+### POST /text-to-speech/:model_id (Streaming)
 
-**Response (streaming=true):**
-- Content-Type: `audio/raw;codec=pcm16;rate=24000;channels=1`
-- Stream of PCM16 audio chunks
+Generate speech from text with streaming PCM16 audio chunks.
 
-**Response (streaming=false):**
-- Content-Type: `audio/wav`
-- Complete WAV audio file
+<Card title="View Documentation" href="/api-reference/text-to-speech-stream">
+  Streaming PCM16 audio endpoint
+</Card>
 
-### WebSocket /text-to-speech
+### WSS /text-to-speech
 
 Real-time streaming via WebSocket connection.
 
@@ -175,6 +166,16 @@ def generate_speech(model_id, voice_id, text, api_key):
 3. **Handle errors gracefully**: Always check for error responses and handle insufficient balance scenarios
 4. **Cache models**: Model information doesn't change frequently, cache model lists to reduce API calls
 
-<Card title="API Reference" href="/api-reference/text-to-speech">
-  View complete API documentation
-</Card>
+<CardGroup cols={2}>
+  <Card title="POST Endpoint" href="/api-reference/text-to-speech-post">
+    Complete WAV file generation
+  </Card>
+
+  <Card title="STREAM Endpoint" href="/api-reference/text-to-speech-stream">
+    Streaming PCM16 audio
+  </Card>
+
+  <Card title="WSS Endpoint" href="/api-reference/websocket">
+    WebSocket streaming
+  </Card>
+</CardGroup>

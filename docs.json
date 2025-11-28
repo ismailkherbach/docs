@@ -11,7 +11,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Docs",
         "groups": [
           {
             "group": "Getting started",
@@ -45,7 +45,8 @@
             "group": "Endpoints",
             "pages": [
               "api-reference/models",
-              "api-reference/text-to-speech",
+              "api-reference/text-to-speech-post",
+              "api-reference/text-to-speech-stream",
               "api-reference/websocket"
             ]
           }

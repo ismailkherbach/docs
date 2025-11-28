@@ -7,49 +7,72 @@ description: "Explore Faseeh's voice synthesis models"
 
 Faseeh offers state-of-the-art Arabic voice synthesis models designed to handle various dialects and use cases.
 
-## Available Models
+## Meet the Models
 
-Use the `/models` endpoint to retrieve a list of all available models and their specifications.
-
-<CardGroup cols={2}>
-  <Card title="Get Models" href="/api-reference/models">
-    Retrieve all available models
+<CardGroup cols={2} rows={1}>
+  <Card title="Faseeh v1 Preview">
+    High-quality Arabic voice synthesis model
     
     <div>
       <div>
-        Model IDs and names
+        Natural-sounding Arabic speech
       </div>
       
       <div>
-        Cost per character
+        Multiple Arabic dialects supported
       </div>
       
       <div>
-        Model descriptions
+        High-quality voice generation
+      </div>
+      
+      <div>
+        Optimized for clarity and naturalness
+      </div>
+    </div>
+  </Card>
+
+  <Card title="Faseeh v1 Turbo Preview">
+    Fast Arabic voice synthesis model
+    
+    <div>
+      <div>
+        Low-latency generation
+      </div>
+      
+      <div>
+        Multiple Arabic dialects supported
+      </div>
+      
+      <div>
+        Faster model with optimized performance
+      </div>
+      
+      <div>
+        Ideal for real-time applications
       </div>
     </div>
   </Card>
 </CardGroup>
 
-## Model Properties
+## Model Comparison
 
-Each model includes the following properties:
-
-- **id**: Unique identifier for the model
-- **model_id**: Model identifier used in API calls
-- **model_name**: Human-readable model name
-- **cost**: Cost per character for text-to-speech generation
-- **description**: Detailed description of the model's capabilities
-- **created_at**: Timestamp when the model was created
-- **updated_at**: Timestamp when the model was last updated
+| Feature | Faseeh v1 Preview | Faseeh v1 Turbo Preview |
+|---------|-------------------|------------------------|
+| **Quality** | High | High |
+| **Speed** | Standard | Fast |
+| **Latency** | Standard | Low |
+| **Use Case** | General purpose | Real-time applications |
+| **Dialects** | Multiple Arabic dialects | Multiple Arabic dialects |
 
 ## Using Models
 
 Models are used in the following endpoints:
 
-- **Text-to-Speech Generation**: `POST /text-to-speech/:model_id`
-- **WebSocket Streaming**: `WS /text-to-speech` (with `model_id` in initConnection)
+- **Text-to-Speech Generation**: `POST /text-to-speech/:model_id` (with `streaming: false` for WAV file)
+- **Text-to-Speech Streaming**: `POST /text-to-speech/:model_id` (with `streaming: true` for PCM16 stream)
+- **WebSocket Streaming**: `WSS /text-to-speech` (with `model_id` in initConnection)
 
 <Note>
-  **Model Selection**: Choose the appropriate model based on your use case, latency requirements, and cost considerations. Check the model description for specific capabilities and supported dialects.
+  **Model Selection**: Choose Faseeh v1 Preview for general use cases requiring high quality, or Faseeh v1 Turbo Preview for applications requiring low latency and faster generation.
 </Note>

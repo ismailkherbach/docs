@@ -1,0 +1,141 @@
+---
+title: 'Text-to-Speech'
+method: 'POST'
+openapi: 'POST /text-to-speech/{model_id}'
+---
+
+# Text-to-Speech
+
+<Badge>POST</Badge>
+
+Generate speech from Arabic text and receive a complete WAV audio file. The entire audio is generated before being returned, ensuring complete audio quality.
+
+Generate speech from Arabic text and receive a complete WAV audio file. The entire audio is generated before being returned, ensuring complete audio quality.
+
+## Endpoint
+
+```
+POST /text-to-speech/:model_id
+```
+
+## Authentication
+
+Requires API key authentication via `x-api-key` header.
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model_id` | string | Yes | The model identifier to use for generation |
+
+## Request Body
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `voice_id` | string | Yes | The voice ID to use for synthesis |
+| `text` | string | Yes | The Arabic text to convert to speech |
+| `stability` | number | Yes | Voice stability (0.0 to 1.0). Higher values produce more consistent output |
+| `streaming` | boolean | Yes | Must be `false` for complete WAV file response |
+
+### Example Request Body
+
+```json
+{
+  "voice_id": "voice_123",
+  "text": "مرحبا بك في فصيح",
+  "stability": 0.5,
+  "streaming": false
+}
+```
+
+## Response
+
+**Status Code:** `200 OK`
+
+**Headers:**
+- `Content-Type: audio/wav`
+- `Cache-Control: no-cache`
+- `Content-Length: <file_size>`
+
+**Body:** Complete WAV audio file
+
+### Error Responses
+
+**400 Bad Request**
+```json
+{
+  "error": "Bad Request",
+  "message": "Model not found: invalid_model_id"
+}
+```
+
+**402 Payment Required**
+```json
+{
+  "error": "Payment Required",
+  "message": "Insufficient wallet balance. Required: $0.05, Available: $0.02"
+}
+```
+
+## Example Usage
+
+### JavaScript
+
+```javascript
+const response = await fetch('https://api.faseeh.com/text-to-speech/MODEL_ID', {
+  method: 'POST',
+  headers: {
+    'x-api-key': 'YOUR_API_KEY',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    voice_id: 'VOICE_ID',
+    text: 'مرحبا بك في فصيح',
+    stability: 0.5,
+    streaming: false,
+  }),
+});
+
+const audioBlob = await response.blob();
+const audioUrl = URL.createObjectURL(audioBlob);
+// Use audioUrl to play or download the audio
+```
+
+### Python
+
+```python
+import requests
+
+url = "https://api.faseeh.com/text-to-speech/MODEL_ID"
+headers = {
+    "x-api-key": "YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+data = {
+    "voice_id": "VOICE_ID",
+    "text": "مرحبا بك في فصيح",
+    "stability": 0.5,
+    "streaming": False
+}
+
+response = requests.post(url, json=data, headers=headers)
+
+if response.status_code == 200:
+    with open("output.wav", "wb") as f:
+        f.write(response.content)
+else:
+    print(f"Error: {response.status_code} - {response.text}")
+```
+
+## Cost Calculation
+
+The cost is calculated based on:
+- Text length (number of characters)
+- Model cost per character
+
+Cost is deducted from your wallet balance upon successful generation.
+
+<Note>
+  **Wallet Balance**: Ensure your wallet has sufficient balance before making requests. Check your balance in the [Faseeh dashboard](https://app.faseeh.ai/en/api-keys).
+</Note>
+
