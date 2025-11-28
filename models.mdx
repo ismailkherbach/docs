@@ -1,93 +1,55 @@
 ---
 title: "Models"
-description: "Preview changes locally to update your docs"
+description: "Explore Faseeh's voice synthesis models"
 ---
 
-<Info>
-  **Prerequisites**:
+# Models
 
-  - Node.js version 19 or higher
-  - A docs repository with a `docs.json` file
-</Info>
+Faseeh offers state-of-the-art Arabic voice synthesis models designed to handle various dialects and use cases.
 
-Follow these steps to install and run Mintlify on your operating system.
+## Available Models
 
-<Steps>
-  <Step title="Install the Mintlify CLI">
-    ```bash
-    npm i -g mint
-    ```
-  </Step>
-  <Step title="Preview locally">
-    Navigate to your docs directory where your `docs.json` file is located, and run the following command:
+Use the `/models` endpoint to retrieve a list of all available models and their specifications.
 
-    ```bash
-    mint dev
-    ```
+<CardGroup cols={2}>
+  <Card title="Get Models" href="/api-reference/models">
+    Retrieve all available models
+    
+    <div>
+      <div>
+        Model IDs and names
+      </div>
+      
+      <div>
+        Cost per character
+      </div>
+      
+      <div>
+        Model descriptions
+      </div>
+    </div>
+  </Card>
+</CardGroup>
 
-    A local preview of your documentation will be available at `http://localhost:3000`.
-  </Step>
-</Steps>
+## Model Properties
 
-## Custom ports
+Each model includes the following properties:
 
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+- **id**: Unique identifier for the model
+- **model_id**: Model identifier used in API calls
+- **model_name**: Human-readable model name
+- **cost**: Cost per character for text-to-speech generation
+- **description**: Detailed description of the model's capabilities
+- **created_at**: Timestamp when the model was created
+- **updated_at**: Timestamp when the model was last updated
 
-```bash
-mint dev --port 3333
-```
+## Using Models
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
+Models are used in the following endpoints:
 
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
+- **Text-to-Speech Generation**: `POST /text-to-speech/:model_id`
+- **WebSocket Streaming**: `WS /text-to-speech` (with `model_id` in initConnection)
 
-## Mintlify versions
-
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
-
-```bash
-npm mint update
-```
-
-## Validating links
-
-The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
-
-```bash
-mint broken-links
-```
-
-## Deployment
-
-If the deployment is successful, you should see the following:
-
-<Frame>
-  <img
-    src="/images/checks-passed.png"
-    alt="Screenshot of a deployment confirmation message that says All checks have passed."
-    style={{ borderRadius:"0.5rem" }}
-  />
-</Frame>
-
-## Code formatting
-
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
-    This may be due to an outdated version of node. Try the following:
-
-    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
-  </Accordion>
-  <Accordion title="Issue: Encountering an unknown error">
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
-  </Accordion>
-</AccordionGroup>
-
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+<Note>
+  **Model Selection**: Choose the appropriate model based on your use case, latency requirements, and cost considerations. Check the model description for specific capabilities and supported dialects.
+</Note>

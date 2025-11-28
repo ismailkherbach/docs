@@ -1,0 +1,270 @@
+---
+title: 'WebSocket Streaming'
+description: 'Real-time bidirectional audio streaming via WebSocket'
+---
+
+# WebSocket Streaming
+
+The WebSocket endpoint provides real-time bidirectional communication for streaming text-to-speech generation. This is ideal for applications requiring low-latency audio streaming.
+
+## Endpoint
+
+```
+WS /text-to-speech
+```
+
+## Connection
+
+Connect to the WebSocket endpoint:
+
+```
+wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY
+```
+
+Or include the API key in the `x-api-key` header during the WebSocket handshake.
+
+## Authentication
+
+Authentication can be provided via:
+- Query parameter: `?x-api-key=YOUR_API_KEY`
+- Header: `x-api-key: YOUR_API_KEY`
+- In `initConnection` message: `x_api_key` field
+
+## Message Types
+
+### Initialize Connection
+
+Initialize the WebSocket connection with model and voice settings.
+
+**Message:**
+```json
+{
+  "type": "initConnection",
+  "model_id": "MODEL_ID",
+  "voice_id": "VOICE_ID",
+  "voice_settings": {
+    "stability": 0.5
+  }
+}
+```
+
+**Alternative format (legacy):**
+```json
+{
+  "voice_id": "VOICE_ID",
+  "model_id": "MODEL_ID",
+  "stability": 0.5
+}
+```
+
+**Response:**
+```json
+{
+  "type": "connectionInitialized"
+}
+```
+
+### Send Text
+
+Send text for generation. Text is buffered until generation is triggered.
+
+**Message:**
+```json
+{
+  "type": "text",
+  "text": "مرحبا بك في فصيح",
+  "try_trigger_generation": true
+}
+```
+
+**Parameters:**
+- `text` (string): The text to append to the buffer
+- `try_trigger_generation` (boolean): If `true`, triggers generation immediately after appending text
+
+### Close Connection
+
+Gracefully close the WebSocket connection.
+
+**Message:**
+```json
+{
+  "type": "closeConnection"
+}
+```
+
+## Response Types
+
+### Audio Chunk
+
+Streaming audio data as base64-encoded PCM16 chunks.
+
+```json
+{
+  "audio": "base64_encoded_audio_data",
+  "sampleRate": 24000,
+  "isFinal": false
+}
+```
+
+### Final Chunk
+
+Indicates the end of audio generation.
+
+```json
+{
+  "audio": "",
+  "sampleRate": 24000,
+  "isFinal": true
+}
+```
+
+### Error
+
+Error response with descriptive message.
+
+```json
+{
+  "type": "error",
+  "message": "Error description"
+}
+```
+
+## Example Usage
+
+### JavaScript
+
+```javascript
+const ws = new WebSocket('wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY');
+
+ws.onopen = () => {
+  console.log('WebSocket connected');
+  
+  // Initialize connection
+  ws.send(JSON.stringify({
+    type: 'initConnection',
+    model_id: 'MODEL_ID',
+    voice_id: 'VOICE_ID',
+    voice_settings: {
+      stability: 0.5
+    }
+  }));
+};
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  
+  if (data.type === 'connectionInitialized') {
+    console.log('Connection initialized');
+    
+    // Send text for generation
+    ws.send(JSON.stringify({
+      type: 'text',
+      text: 'مرحبا بك في فصيح',
+      try_trigger_generation: true
+    }));
+  } else if (data.audio) {
+    if (data.isFinal) {
+      console.log('Generation complete');
+    } else {
+      // Decode base64 audio
+      const audioData = atob(data.audio);
+      const audioBuffer = new Uint8Array(audioData.length);
+      for (let i = 0; i < audioData.length; i++) {
+        audioBuffer[i] = audioData.charCodeAt(i);
+      }
+      
+      // Process audio chunk (e.g., play or save)
+      processAudioChunk(audioBuffer, data.sampleRate);
+    }
+  } else if (data.type === 'error') {
+    console.error('Error:', data.message);
+  }
+};
+
+ws.onerror = (error) => {
+  console.error('WebSocket error:', error);
+};
+
+ws.onclose = () => {
+  console.log('WebSocket closed');
+};
+```
+
+### Python
+
+```python
+import asyncio
+import websockets
+import json
+import base64
+
+async def generate_speech():
+    uri = "wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY"
+    
+    async with websockets.connect(uri) as websocket:
+        # Initialize connection
+        await websocket.send(json.dumps({
+            "type": "initConnection",
+            "model_id": "MODEL_ID",
+            "voice_id": "VOICE_ID",
+            "voice_settings": {
+                "stability": 0.5
+            }
+        }))
+        
+        # Wait for initialization confirmation
+        response = await websocket.recv()
+        data = json.loads(response)
+        
+        if data.get("type") == "connectionInitialized":
+            # Send text for generation
+            await websocket.send(json.dumps({
+                "type": "text",
+                "text": "مرحبا بك في فصيح",
+                "try_trigger_generation": True
+            }))
+            
+            # Receive audio chunks
+            audio_chunks = []
+            while True:
+                response = await websocket.recv()
+                data = json.loads(response)
+                
+                if data.get("type") == "error":
+                    print(f"Error: {data['message']}")
+                    break
+                elif data.get("audio") is not None:
+                    if data.get("isFinal"):
+                        break
+                    else:
+                        # Decode base64 audio
+                        audio_data = base64.b64decode(data["audio"])
+                        audio_chunks.append(audio_data)
+                        print(f"Received audio chunk: {len(audio_data)} bytes")
+            
+            # Combine all chunks
+            complete_audio = b''.join(audio_chunks)
+            return complete_audio
+
+# Run the async function
+audio = asyncio.run(generate_speech())
+```
+
+## Best Practices
+
+1. **Initialize First**: Always send `initConnection` before sending text
+2. **Handle Errors**: Implement error handling for all error message types
+3. **Buffer Management**: Text is buffered until `try_trigger_generation` is `true`
+4. **Connection Lifecycle**: Close connections gracefully using `closeConnection`
+5. **Reconnection**: Implement reconnection logic for production applications
+
+## Cost Calculation
+
+Cost is calculated and deducted from your wallet balance when generation completes successfully. The cost is based on:
+- Text length (number of characters)
+- Model cost per character
+
+<Note>
+  **Wallet Balance**: Ensure your wallet has sufficient balance. Insufficient balance will result in an error message.
+</Note>
+

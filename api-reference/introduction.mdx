@@ -1,33 +1,98 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Faseeh API Reference Documentation'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+# API Reference
 
-## Welcome
+Welcome to the Faseeh API reference. This documentation provides detailed information about all available endpoints, request/response formats, and authentication methods.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Base URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+All API requests should be made to:
+
+```
+https://api.faseeh.com
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using an API key. Include your API key in the request headers:
+
+```
+x-api-key: YOUR_API_KEY
+```
+
+<Note>
+  **Security**: Keep your API key secure and never expose it in client-side code or public repositories. API keys can be created and managed in the Faseeh dashboard.
+</Note>
+
+## Endpoints
+
+<CardGroup cols={2}>
+  <Card title="Models" href="/api-reference/models">
+    Retrieve available models
+  </Card>
+
+  <Card title="Text-to-Speech" href="/api-reference/text-to-speech">
+    Generate speech from text
+  </Card>
+
+  <Card title="WebSocket Streaming" href="/api-reference/websocket">
+    Real-time audio streaming
+  </Card>
+</CardGroup>
+
+## Response Formats
+
+### Success Responses
+
+Successful API responses return appropriate data based on the endpoint:
+
+- **JSON**: For model listings and metadata
+- **Audio Stream**: For streaming audio generation (PCM16)
+- **Audio File**: For complete audio generation (WAV)
+
+### Error Responses
+
+Error responses follow this format:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "error": "Error type",
+  "message": "Human-readable error message"
+}
 ```
+
+Common HTTP status codes:
+
+- `200`: Success
+- `400`: Bad Request - Invalid parameters
+- `401`: Unauthorized - Invalid or missing API key
+- `402`: Payment Required - Insufficient wallet balance
+- `404`: Not Found - Resource not found
+- `500`: Internal Server Error
+
+## Rate Limits
+
+API rate limits may apply based on your subscription plan. Rate limit information is included in response headers:
+
+- `X-RateLimit-Limit`: Maximum requests per time window
+- `X-RateLimit-Remaining`: Remaining requests in current window
+- `X-RateLimit-Reset`: Time when the rate limit resets
+
+## Wallet System
+
+Faseeh uses a wallet-based billing system. Each API call consumes credits based on:
+
+- Model cost per character
+- Text length
+- Generation type
+
+Ensure your wallet has sufficient balance before making API calls. Insufficient balance will result in a `402 Payment Required` error.
+
+## Getting Started
+
+<Card title="Quickstart Guide" href="/quickstart">
+  Follow our quickstart guide to make your first API call
+</Card>

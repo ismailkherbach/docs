@@ -1,0 +1,80 @@
+---
+title: 'Get Models'
+openapi: 'GET /models'
+---
+
+# Get Models
+
+Retrieve a list of all available voice synthesis models.
+
+## Endpoint
+
+```
+GET /models
+```
+
+## Authentication
+
+Requires API key authentication via `x-api-key` header.
+
+## Response
+
+Returns an array of model objects.
+
+### Response Schema
+
+Each model object contains:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string (UUID) | Unique identifier for the model |
+| `model_id` | string | Model identifier used in API calls |
+| `model_name` | string | Human-readable model name |
+| `cost` | number | Cost per character for text-to-speech generation |
+| `description` | string \| null | Detailed description of the model |
+| `created_at` | string (ISO 8601) | Timestamp when the model was created |
+| `updated_at` | string (ISO 8601) | Timestamp when the model was last updated |
+
+### Example Request
+
+```bash
+curl -X GET "https://api.faseeh.com/models" \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+### Example Response
+
+```json
+[
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "model_id": "faseeh-arabic-v1",
+    "model_name": "Faseeh Arabic v1",
+    "cost": 0.0001,
+    "description": "High-quality Arabic voice synthesis supporting multiple dialects",
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174001",
+    "model_id": "faseeh-arabic-fast",
+    "model_name": "Faseeh Arabic Fast",
+    "cost": 0.00005,
+    "description": "Fast Arabic voice synthesis with lower latency",
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z"
+  }
+]
+```
+
+## Usage
+
+Use the `model_id` from the response in text-to-speech generation endpoints:
+
+- `POST /text-to-speech/:model_id` - HTTP endpoint
+- `WS /text-to-speech` - WebSocket endpoint (include `model_id` in initConnection message)
+
+<Note>
+  **Caching**: Model information doesn't change frequently. Consider caching the model list to reduce API calls.
+</Note>
+
