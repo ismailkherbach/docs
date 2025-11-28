@@ -56,7 +56,7 @@
       "anchors": [
         {
           "anchor": "Dashboard",
-          "href": "https://dashboard.faseeh.com",
+          "href": "https://app.faseeh.ai",
           "icon": "chart-line"
         },
         {
@@ -75,13 +75,13 @@
     "links": [
       {
         "label": "Dashboard",
-        "href": "https://dashboard.faseeh.com"
+        "href": "https://app.faseeh.ai"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Get API Key",
-      "href": "https://dashboard.faseeh.com/api-keys"
+      "href": "https://app.faseeh.ai/en/api-keys"
     }
   },
   "contextual": {
