@@ -30,8 +30,6 @@ Each model object contains:
 | `model_name` | string | Human-readable model name |
 | `cost` | number | Cost per character for text-to-speech generation |
 | `description` | string \| null | Detailed description of the model |
-| `created_at` | string (ISO 8601) | Timestamp when the model was created |
-| `updated_at` | string (ISO 8601) | Timestamp when the model was last updated |
 
 ### Example Request
 
@@ -49,18 +47,14 @@ curl -X GET "https://api.faseeh.com/models" \
     "model_id": "faseeh-arabic-v1",
     "model_name": "Faseeh Arabic v1",
     "cost": 0.0001,
-    "description": "High-quality Arabic voice synthesis supporting multiple dialects",
-    "created_at": "2024-01-01T00:00:00Z",
-    "updated_at": "2024-01-01T00:00:00Z"
+    "description": "High-quality Arabic voice synthesis supporting multiple dialects"
   },
   {
     "id": "123e4567-e89b-12d3-a456-426614174001",
     "model_id": "faseeh-arabic-fast",
     "model_name": "Faseeh Arabic Fast",
     "cost": 0.00005,
-    "description": "Fast Arabic voice synthesis with lower latency",
-    "created_at": "2024-01-01T00:00:00Z",
-    "updated_at": "2024-01-01T00:00:00Z"
+    "description": "Fast Arabic voice synthesis with lower latency"
   }
 ]
 ```

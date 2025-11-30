@@ -22,7 +22,9 @@
         "summary": "Get Models",
         "description": "Retrieve a list of all available voice synthesis models",
         "operationId": "getModels",
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "responses": {
           "200": {
             "description": "List of available models",
@@ -55,7 +57,9 @@
         "summary": "Generate Text-to-Speech",
         "description": "Generate speech from Arabic text using a specific model. Supports both streaming and non-streaming responses.",
         "operationId": "generateTextToSpeech",
-        "tags": ["Text-to-Speech"],
+        "tags": [
+          "Text-to-Speech"
+        ],
         "parameters": [
           {
             "name": "model_id",
@@ -167,23 +171,23 @@
             "type": "string",
             "nullable": true,
             "description": "Detailed description of the model"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the model was created"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the model was last updated"
           }
         },
-        "required": ["id", "model_id", "model_name", "cost", "created_at", "updated_at"]
+        "required": [
+          "id",
+          "model_id",
+          "model_name",
+          "cost"
+        ]
       },
       "TextToSpeechRequest": {
         "type": "object",
-        "required": ["voice_id", "text", "stability", "streaming"],
+        "required": [
+          "voice_id",
+          "text",
+          "stability",
+          "streaming"
+        ],
         "properties": {
           "voice_id": {
             "type": "string",
@@ -207,7 +211,10 @@
       },
       "Error": {
         "type": "object",
-        "required": ["error", "message"],
+        "required": [
+          "error",
+          "message"
+        ],
         "properties": {
           "error": {
             "type": "string",
