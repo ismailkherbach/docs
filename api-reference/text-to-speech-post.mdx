@@ -62,16 +62,16 @@ Requires API key authentication via `x-api-key` header.
 **400 Bad Request**
 ```json
 {
-  "error": "Bad Request",
-  "message": "Model not found: invalid_model_id"
+  "errorCode": "400xx",
+  "errorMessage": "Model not found: invalid_model_id"
 }
 ```
 
 **402 Payment Required**
 ```json
 {
-  "error": "Payment Required",
-  "message": "Insufficient wallet balance. Required: $0.05, Available: $0.02"
+  "errorCode": "402xx",
+  "errorMessage": "Insufficient wallet balance. Required: $0.05, Available: $0.02"
 }
 ```
 

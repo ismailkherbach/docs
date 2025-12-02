@@ -48,6 +48,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -140,6 +150,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -212,15 +232,15 @@
       "Error": {
         "type": "object",
         "required": [
-          "error",
-          "message"
+          "errorCode",
+          "errorMessage"
         ],
         "properties": {
-          "error": {
+          "errorCode": {
             "type": "string",
-            "description": "Error type"
+            "description": "Error code identifier"
           },
-          "message": {
+          "errorMessage": {
             "type": "string",
             "description": "Human-readable error message"
           }

@@ -61,8 +61,8 @@ Error responses follow this format:
 
 ```json
 {
-  "error": "Error type",
-  "message": "Human-readable error message"
+  "errorCode": "xxxxxx",
+  "errorMessage": "Human-readable error message"
 }
 ```
 
@@ -73,15 +73,8 @@ Common HTTP status codes:
 - `401`: Unauthorized - Invalid or missing API key
 - `402`: Payment Required - Insufficient wallet balance
 - `404`: Not Found - Resource not found
+- `429`: Too Many Requests - Rate limit exceeded
 - `500`: Internal Server Error
-
-## Rate Limits
-
-API rate limits may apply based on your subscription plan. Rate limit information is included in response headers:
-
-- `X-RateLimit-Limit`: Maximum requests per time window
-- `X-RateLimit-Remaining`: Remaining requests in current window
-- `X-RateLimit-Reset`: Time when the rate limit resets
 
 ## Wallet System
 
