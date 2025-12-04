@@ -12,7 +12,7 @@ The WebSocket endpoint provides real-time bidirectional communication for stream
 ## Endpoint
 
 ```
-WSS /text-to-speech
+WSS /api/v1/text-to-speech
 ```
 
 ## Connection
@@ -20,7 +20,7 @@ WSS /text-to-speech
 Connect to the WebSocket endpoint:
 
 ```
-wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY
+wss://api.faseeh.com/api/v1/text-to-speech?x-api-key=YOUR_API_KEY
 ```
 
 Or include the API key in the `x-api-key` header during the WebSocket handshake.
@@ -212,7 +212,7 @@ Error response with descriptive message.
 ### JavaScript
 
 ```javascript
-const ws = new WebSocket('wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY');
+const ws = new WebSocket('wss://api.faseeh.com/api/v1/text-to-speech?x-api-key=YOUR_API_KEY');
 
 ws.onopen = () => {
   console.log('WebSocket connected');
@@ -277,7 +277,7 @@ import json
 import base64
 
 async def generate_speech():
-    uri = "wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY"
+    uri = "wss://api.faseeh.com/api/v1/text-to-speech?x-api-key=YOUR_API_KEY"
     
     async with websockets.connect(uri) as websocket:
         # Initialize connection

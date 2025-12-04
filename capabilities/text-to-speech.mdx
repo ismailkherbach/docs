@@ -15,7 +15,7 @@ The Text-to-Speech API provides three methods for generating speech:
 
 ## Endpoints
 
-### POST /text-to-speech/:model_id (Complete Audio)
+### POST /api/v1/text-to-speech/:model_id (Complete Audio)
 
 Generate speech from text and receive a complete WAV file.
 
@@ -23,7 +23,7 @@ Generate speech from text and receive a complete WAV file.
   Complete WAV file generation endpoint
 </Card>
 
-### POST /text-to-speech/:model_id (Streaming)
+### POST /api/v1/text-to-speech/:model_id (Streaming)
 
 Generate speech from text with streaming PCM16 audio chunks.
 
@@ -31,13 +31,13 @@ Generate speech from text with streaming PCM16 audio chunks.
   Streaming PCM16 audio endpoint
 </Card>
 
-### WSS /text-to-speech
+### WSS /api/v1/text-to-speech
 
 Real-time streaming via WebSocket connection.
 
 **Connection:**
 ```
-wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY
+wss://api.faseeh.com/api/v1/text-to-speech?x-api-key=YOUR_API_KEY
 ```
 
 **Messages:**
@@ -111,7 +111,7 @@ wss://api.faseeh.com/text-to-speech?x-api-key=YOUR_API_KEY
 
 ```typescript
 async function generateSpeech(modelId: string, voiceId: string, text: string) {
-  const response = await fetch(`https://api.faseeh.com/text-to-speech/${modelId}`, {
+  const response = await fetch(`https://api.faseeh.com/api/v1/text-to-speech/${modelId}`, {
     method: 'POST',
     headers: {
       'x-api-key': 'YOUR_API_KEY',
@@ -137,7 +137,7 @@ async function generateSpeech(modelId: string, voiceId: string, text: string) {
 import requests
 
 def generate_speech(model_id, voice_id, text, api_key):
-    url = f"https://api.faseeh.com/text-to-speech/{model_id}"
+    url = f"https://api.faseeh.com/api/v1/text-to-speech/{model_id}"
     headers = {
         "x-api-key": api_key,
         "Content-Type": "application/json"
