@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.faseeh.com/api/v1",
+      "url": "https://api.faseeh.ai/api/v1",
       "description": "Production server"
     }
   ],
