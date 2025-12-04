@@ -8,7 +8,7 @@ Retrieve a list of all available voice synthesis models.
 ## Endpoint
 
 ```
-GET /api/v1/models
+GET /models
 ```
 
 ## Authentication
@@ -63,8 +63,8 @@ curl -X GET "https://api.faseeh.com/api/v1/models" \
 
 Use the `model_id` from the response in text-to-speech generation endpoints:
 
-- `POST /api/v1/text-to-speech/:model_id` - HTTP endpoint
-- `WS /api/v1/text-to-speech` - WebSocket endpoint (include `model_id` in initConnection message)
+- `POST /text-to-speech/:model_id` - HTTP endpoint
+- `WS /text-to-speech` - WebSocket endpoint (include `model_id` in initConnection message)
 
 <Note>
   **Caching**: Model information doesn't change frequently. Consider caching the model list to reduce API calls.

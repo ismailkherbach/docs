@@ -15,7 +15,7 @@ The Text-to-Speech API provides three methods for generating speech:
 
 ## Endpoints
 
-### POST /api/v1/text-to-speech/:model_id (Complete Audio)
+### POST /text-to-speech/:model_id (Complete Audio)
 
 Generate speech from text and receive a complete WAV file.
 
@@ -23,7 +23,7 @@ Generate speech from text and receive a complete WAV file.
   Complete WAV file generation endpoint
 </Card>
 
-### POST /api/v1/text-to-speech/:model_id (Streaming)
+### POST /text-to-speech/:model_id (Streaming)
 
 Generate speech from text with streaming PCM16 audio chunks.
 
@@ -31,7 +31,7 @@ Generate speech from text with streaming PCM16 audio chunks.
   Streaming PCM16 audio endpoint
 </Card>
 
-### WSS /api/v1/text-to-speech
+### WSS /text-to-speech
 
 Real-time streaming via WebSocket connection.
 

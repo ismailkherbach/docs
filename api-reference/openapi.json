@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.faseeh.com",
+      "url": "https://api.faseeh.com/api/v1",
       "description": "Production server"
     }
   ],
@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/api/v1/models": {
+    "/models": {
       "get": {
         "summary": "Get Models",
         "description": "Retrieve a list of all available voice synthesis models",
@@ -62,7 +62,7 @@
         }
       }
     },
-    "/api/v1/text-to-speech/{model_id}": {
+    "/text-to-speech/{model_id}": {
       "post": {
         "summary": "Generate Text-to-Speech",
         "description": "Generate speech from Arabic text using a specific model. Supports both streaming and non-streaming responses.",
