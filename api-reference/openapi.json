@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/models": {
+    "/api/v1/models": {
       "get": {
         "summary": "Get Models",
         "description": "Retrieve a list of all available voice synthesis models",
@@ -62,7 +62,7 @@
         }
       }
     },
-    "/text-to-speech/{model_id}": {
+    "/api/v1/text-to-speech/{model_id}": {
       "post": {
         "summary": "Generate Text-to-Speech",
         "description": "Generate speech from Arabic text using a specific model. Supports both streaming and non-streaming responses.",
