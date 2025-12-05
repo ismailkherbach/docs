@@ -95,7 +95,7 @@ Requires API key authentication. Authentication can be provided via:
 ```json
 {
   "type": "text",
-  "text": "مرحبا بك في فصيح",
+  "text": "مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم",
   "try_trigger_generation": true
 }
 ```
@@ -150,7 +150,7 @@ Send text for generation. Text is buffered until generation is triggered.
 ```json
 {
   "type": "text",
-  "text": "مرحبا بك في فصيح",
+  "text": "مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم",
   "try_trigger_generation": true
 }
 ```
@@ -237,7 +237,7 @@ ws.onmessage = (event) => {
     // Send text for generation
     ws.send(JSON.stringify({
       type: 'text',
-      text: 'مرحبا بك في فصيح',
+      text: 'مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم',
       try_trigger_generation: true
     }));
   } else if (data.audio) {
@@ -298,7 +298,7 @@ async def generate_speech():
             # Send text for generation
             await websocket.send(json.dumps({
                 "type": "text",
-                "text": "مرحبا بك في فصيح",
+                "text": "مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم",
                 "try_trigger_generation": True
             }))
             

@@ -54,7 +54,7 @@ curl -X POST "https://api.faseeh.ai/api/v1/text-to-speech/MODEL_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "voice_id": "VOICE_ID",
-    "text": "مرحبا بك في فصيح",
+    "text": "مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم",
     "stability": 0.5,
     "streaming": true
   }' \
@@ -71,7 +71,7 @@ curl -X POST "https://api.faseeh.ai/api/v1/text-to-speech/MODEL_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "voice_id": "VOICE_ID",
-    "text": "مرحبا بك في فصيح",
+    "text": "مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم",
     "stability": 0.5,
     "streaming": false
   }' \
@@ -104,7 +104,7 @@ ws.onmessage = (event) => {
     // Send text for generation
     ws.send(JSON.stringify({
       type: 'text',
-      text: 'مرحبا بك في فصيح',
+      text: 'مرحبا بك في فصيح كيف يمكنني مساعدتك اليوم',
       try_trigger_generation: true
     }));
   } else if (data.audio) {
