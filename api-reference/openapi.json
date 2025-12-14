@@ -62,6 +62,51 @@
         }
       }
     },
+    "/voices": {
+      "get": {
+        "summary": "Get Voices",
+        "description": "Retrieve a list of all available voices for text-to-speech synthesis",
+        "operationId": "getVoices",
+        "tags": [
+          "Voices"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available voices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Voice"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/text-to-speech/{model_id}": {
       "post": {
         "summary": "Generate Text-to-Speech",
@@ -198,6 +243,76 @@
           "model_id",
           "model_name",
           "cost"
+        ]
+      },
+      "Voice": {
+        "type": "object",
+        "properties": {
+          "voice_id": {
+            "type": "string",
+            "description": "Unique identifier for the voice (used in text-to-speech requests)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name of the voice"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Detailed description of the voice characteristics"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "male",
+              "female"
+            ],
+            "description": "Gender of the voice"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "middle",
+              "elderly"
+            ],
+            "description": "Age category of the voice"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of language codes supported by the voice (e.g., [\"ar\", \"en\"])"
+          },
+          "dialect": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of dialects supported by the voice (e.g., [\"fusha\", \"emirati\", \"najdi\"])"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "neural"
+            ],
+            "description": "Voice type"
+          },
+          "sample_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to an audio sample of the voice"
+          }
+        },
+        "required": [
+          "voice_id",
+          "name",
+          "languages",
+          "dialect",
+          "sample_url"
         ]
       },
       "TextToSpeechRequest": {
