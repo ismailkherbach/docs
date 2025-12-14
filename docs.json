@@ -49,6 +49,12 @@
             ]
           },
           {
+            "group": "Voices",
+            "pages": [
+              "api-reference/voices"
+            ]
+          },
+          {
             "group": "Text-to-speech",
             "pages": [
               "api-reference/text-to-speech-post",
