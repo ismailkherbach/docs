@@ -1,0 +1,393 @@
+---
+title: 'LiveKit Plugin'
+description: 'Integrate Faseeh Arabic TTS with LiveKit voice agents'
+---
+
+# Integrating Faseeh with LiveKit Agents
+
+This tutorial will guide you through integrating Faseeh's Arabic text-to-speech into your LiveKit voice agents, enabling natural-sounding Arabic conversations in your real-time applications.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- A [Faseeh AI](https://app.faseeh.ai) account
+- Python 3.9 or higher installed
+- Basic familiarity with LiveKit Agents framework
+- A LiveKit Cloud account (or self-hosted LiveKit server)
+
+## Step 1: Generate Your Faseeh API Key
+
+### 1.1 Log into Faseeh Dashboard
+
+1. Navigate to [app.faseeh.ai](https://app.faseeh.ai) and log in with your credentials
+2. If you don't have an account yet, sign up at [faseeh.ai](https://faseeh.ai)
+
+### 1.2 Create an API Key
+
+1. Once logged in, go to **Settings** → **API Keys** in the left sidebar
+2. Click the **"Generate New API Key"** button
+3. Give your key a descriptive name (e.g., "LiveKit Production" or "Development Testing")
+4. Select the appropriate permissions:
+   - ✅ **Text-to-Speech** (required)
+   - Optionally enable other services if needed
+5. Click **"Create Key"**
+
+### 1.3 Save Your API Key
+
+<Warning>
+  **Important**: Your API key will only be displayed once. Copy it immediately and store it securely.
+</Warning>
+
+```bash
+# Your API key will look like this:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlfaWQiOiJ4eHh4eC...
+```
+
+## Step 2: Install the Plugin
+
+Install the Faseeh plugin for LiveKit Agents:
+
+```bash
+pip install livekit-plugins-faseeh
+```
+
+For development or testing from source:
+
+```bash
+git clone https://github.com/actualize-ae/livekit-plugins-faseeh.git
+cd livekit-plugins-faseeh
+pip install -e .
+```
+
+## Step 3: Set Up Your Environment
+
+Create a `.env.local` file in your project directory to store your API keys securely:
+
+```bash
+# Faseeh Configuration
+FASEEH_API_KEY=your_faseeh_api_key_here
+
+# LiveKit Configuration
+LIVEKIT_URL=wss://your-livekit-server.com
+LIVEKIT_API_KEY=your_livekit_api_key
+LIVEKIT_API_SECRET=your_livekit_api_secret
+
+# LLM Configuration (for the agent's brain)
+OPENAI_API_KEY=your_openai_api_key
+
+# Optional: Deepgram for Arabic STT
+DEEPGRAM_API_KEY=your_deepgram_api_key
+```
+
+## Step 4: Create Your First Arabic Voice Agent
+
+Create a file called `arabic_agent.py`:
+
+```python
+"""
+Simple Arabic Voice Assistant using Faseeh TTS
+"""
+from dotenv import load_dotenv
+from livekit import agents
+from livekit.agents import AgentServer, AgentSession, Agent
+from livekit.plugins import silero, deepgram, openai, faseeh
+
+# Load environment variables
+load_dotenv(".env.local")
+
+
+class ArabicAssistant(Agent):
+    """Arabic-speaking voice assistant"""
+
+    def __init__(self) -> None:
+        super().__init__(
+            instructions="""أنت مساعد صوتي ذكي يتحدث العربية بطلاقة.
+            مهمتك مساعدة المستخدمين بالإجابة على أسئلتهم بطريقة واضحة ومفيدة.
+            كن ودوداً ومحترماً في تعاملك."""
+        )
+
+
+# Create the agent server
+server = AgentServer()
+
+
+@server.rtc_session()
+async def my_agent(ctx: agents.JobContext):
+    """Entry point for each agent session"""
+
+    # Configure Faseeh TTS
+    faseeh_tts = faseeh.TTS(
+        voice_id="ar-uae-male-1",           # Choose your voice
+        model="faseeh-v1-preview",          # Use full model for best quality
+        stability=0.75,                     # Balanced stability
+    )
+
+    # Create agent session with all components
+    session = AgentSession(
+        stt=openai.STT(),
+        llm=openai.LLM(                     # Language model
+            model="gpt-4o",
+            temperature=0.7
+        ),
+        tts=faseeh_tts,                     # Faseeh for Arabic speech
+        vad=silero.VAD.load(),              # Voice activity detection
+    )
+
+    # Start the session
+    await session.start(
+        room=ctx.room,
+        agent=ArabicAssistant()
+    )
+
+    # Generate initial greeting
+    await session.generate_reply(
+        instructions="رحب بالمستخدم باللغة العربية وقدم نفسك كمساعد ذكي جاهز للمساعدة."
+    )
+
+
+if __name__ == "__main__":
+    agents.cli.run_app(server)
+```
+
+## Step 5: Run Your Agent
+
+### Development Mode
+
+For local testing with LiveKit's dev server:
+
+```bash
+python arabic_agent.py dev
+```
+
+This will:
+
+1. Start a local LiveKit server
+2. Launch your agent
+3. Provide a test URL you can open in your browser
+
+### Production Mode
+
+For deployment with your LiveKit Cloud or self-hosted server:
+
+```bash
+python arabic_agent.py start
+```
+
+Make sure your LiveKit credentials are properly configured in `.env.local`.
+
+## Step 6: Test Your Agent
+
+1. Open the provided URL in your web browser
+2. Allow microphone access when prompted
+3. Speak in Arabic - the agent will respond using Faseeh's natural-sounding voice
+4. Try different questions to test the conversation flow
+
+## Configuration Options
+
+### Available Voice IDs
+
+To choose a voice for your agent:
+
+1. Visit the [Faseeh Voice Gallery](https://app.faseeh.ai/en/voices)
+2. Listen to different voices to find the one that best fits your use case
+3. Click **"Copy Voice ID"** button next to your chosen voice
+4. Use that voice ID in your code:
+
+```python
+faseeh_tts = faseeh.TTS(
+    voice_id="ar-uae-male-1",  # Paste the copied voice ID here
+    model="faseeh-v1-preview"
+)
+```
+
+### Model Selection
+
+Choose between two models based on your needs:
+
+```python
+# Full model - Best quality, slightly higher latency
+faseeh_tts = faseeh.TTS(
+    model="faseeh-v1-preview",
+    stability=0.75
+)
+
+# Mini model - Faster, lower latency, good quality
+faseeh_tts = faseeh.TTS(
+    model="faseeh-mini-v1-preview",
+    stability=0.75
+)
+```
+
+### Stability Parameter
+
+The `stability` parameter controls voice consistency:
+
+- **0.0 - 0.4**: More expressive, creative, but can hallucinate
+- **0.5 - 0.7**: Balanced (recommended for most use cases)
+- **0.8 - 1.0**: Very consistent, less variation
+
+```python
+# Dynamic voice - More expressive
+faseeh_tts = faseeh.TTS(stability=0.4)
+
+# Consistent voice - Professional applications
+faseeh_tts = faseeh.TTS(stability=0.9)
+```
+
+### Dynamic Voice Switching
+
+You can change voice settings during runtime:
+
+```python
+# Start with one voice
+faseeh_tts = faseeh.TTS(voice_id="ar-uae-male-1")
+
+# Switch to a different voice based on context
+faseeh_tts.update_options(
+    voice_id="ar-hijazi-female-2",
+    stability=0.8
+)
+```
+
+## Advanced Features
+
+### Bilingual Support
+
+Create agents that can switch between Arabic and English:
+
+```python
+class BilingualAssistant(Agent):
+    def __init__(self) -> None:
+        super().__init__(
+            instructions="""You are a bilingual AI assistant fluent in both Arabic and English.
+            Automatically detect the user's language and respond in the same language.
+            If the user speaks Arabic, respond in Arabic using natural expressions.
+            If the user speaks English, respond in English."""
+        )
+
+@server.rtc_session()
+async def bilingual_agent(ctx: agents.JobContext):
+    session = AgentSession(
+        stt=deepgram.STT(
+            language="multi",  # Multi-language support
+            model="nova-2-general"
+        ),
+        llm=openai.LLM(model="gpt-4o-mini"),
+        tts=faseeh.TTS(
+            voice_id="ar-uae-male-1",
+            model="faseeh-v1-preview"
+        ),
+        vad=silero.VAD.load(),
+    )
+
+    await session.start(room=ctx.room, agent=BilingualAssistant())
+```
+
+### Streaming for Low Latency
+
+Faseeh supports streaming for real-time applications:
+
+```python
+# Streaming is automatically enabled
+# The agent will start speaking as soon as the first audio chunk is ready
+faseeh_tts = faseeh.TTS(
+    model="faseeh-mini-v1-preview",  # Mini model for even lower latency
+    stability=0.6
+)
+```
+
+## Monitoring and Metrics
+
+Track your agent's performance:
+
+```python
+from livekit.agents.metrics import TTSMetrics
+import logging
+
+logger = logging.getLogger("faseeh_agent")
+
+@session.on("metrics_collected")
+def _on_metrics_collected(event):
+    metrics = event.metrics
+
+    if isinstance(metrics, TTSMetrics):
+        logger.info(
+            f"TTS Performance - "
+            f"TTFB: {metrics.ttfb:.2f}s, "
+            f"Audio Duration: {metrics.audio_duration:.2f}s"
+        )
+```
+
+## Best Practices
+
+### 1. API Key Security
+
+✅ **DO:**
+
+- Store API keys in `.env.local` (not committed to Git)
+- Use environment variables in production
+- Rotate keys periodically
+
+❌ **DON'T:**
+
+- Hardcode API keys in source code
+- Commit `.env` files to version control
+- Share API keys in chat or email
+
+### 2. Stability Settings
+
+- **Chatbots**: 0.6 - 0.8 (balanced and reliable)
+- **Professional Applications**: 0.8 - 1.0 (very consistent)
+- **Creative Content**: 0.3 - 0.5 (more expressive)
+
+## Troubleshooting
+
+### "Invalid API Key" Error
+
+**Solution**: Double-check your API key in `.env.local`
+
+```bash
+# Verify the key is set correctly
+echo $FASEEH_API_KEY
+```
+
+### "Payment Required" Error
+
+**Solution**: Your Faseeh account balance is low. Top up at [apps.faseeh.ai](https://apps.faseeh.ai)
+
+### "Rate Limit Exceeded"
+
+**Solution**: You're sending too many requests. Implement rate limiting or contact Faseeh support to increase your limits.
+
+### No Audio Output
+
+**Checklist:**
+
+1. ✅ API key is valid
+2. ✅ Network connection is stable
+3. ✅ Microphone permissions are granted
+4. ✅ Browser supports WebRTC
+5. ✅ Firewall allows WebSocket connections
+
+### Poor Audio Quality
+
+**Solutions:**
+
+- Switch to `faseeh-v1-preview` (full model)
+- Increase stability to 0.8 or higher
+- Check your network connection
+- Ensure proper audio codec support
+
+## Support
+
+Need help?
+
+- **Plugin Issues**: [GitHub Issues](https://github.com/actualize-ae/livekit-plugins-faseeh/issues)
+- **Faseeh Support**: [Schedule a Meeting](https://www.actualize.pro/schedule)
+- **LiveKit Support**: [LiveKit Community](https://livekit.io/community)
+
+## License
+
+This plugin is licensed under Apache License 2.0. See [LICENSE](https://github.com/actualize-ae/livekit-plugins-faseeh/blob/main/LICENSE) for details.
+

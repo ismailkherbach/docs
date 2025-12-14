@@ -30,6 +30,12 @@
               "capabilities/voice-cloning",
               "capabilities/voice-isolation"
             ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/livekit-plugin"
+            ]
           }
         ]
       },
@@ -74,7 +80,7 @@
         },
         {
           "anchor": "Support",
-          "href": "mailto:apps@actualize.ae",
+          "href": "https://www.actualize.pro/schedule",
           "icon": "envelope"
         }
       ]
