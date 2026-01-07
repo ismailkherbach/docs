@@ -34,7 +34,8 @@
           {
             "group": "Integrations",
             "pages": [
-              "integrations/livekit-plugin"
+              "integrations/livekit-plugin",
+              "integrations/vapi-integration"
             ]
           }
         ]

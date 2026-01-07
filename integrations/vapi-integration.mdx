@@ -1,0 +1,441 @@
+---
+title: 'VAPI Integration'
+description: 'Integrate Faseeh Arabic TTS with VAPI voice assistants'
+---
+
+# Integrating Faseeh with VAPI
+
+This guide will help you integrate Faseeh's Arabic text-to-speech into your VAPI voice assistants, enabling natural-sounding Arabic conversations in your phone calls and voice applications.
+
+## Overview
+
+Integrate Faseeh's Text-to-Speech (TTS) system with VAPI Assistant for complete control over Arabic voice synthesis. Whether you need brand-specific voices, advanced audio quality, or cost optimization, custom TTS gives you the flexibility to use Faseeh's high-quality Arabic voices while maintaining real-time performance.
+
+**In this guide, you'll learn to:**
+
+* Set up webhook authentication between VAPI and your Faseeh TTS endpoint
+* Configure your VAPI assistant to use Faseeh's custom voice provider
+* Understand the URL structure and parameters
+* Handle edge cases and troubleshoot common issues
+
+<Tip>
+  Custom TTS maintains VAPI's real-time performance while giving you complete
+  flexibility over voice synthesis, language support, and audio quality.
+</Tip>
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- A [Faseeh AI](https://app.faseeh.ai) account
+- A [VAPI](https://vapi.ai) account with access to custom voice configuration
+- Basic familiarity with VAPI Assistant configuration
+
+## How Faseeh TTS Integration Works
+
+VAPI's custom TTS system operates through a webhook pattern:
+
+<Steps>
+  <Step title="Text conversion trigger">
+    During a conversation, VAPI needs to convert text to speech
+  </Step>
+
+  <Step title="Request to Faseeh endpoint">
+    VAPI sends a POST request to Faseeh's TTS endpoint with text and audio
+    specifications
+  </Step>
+
+  <Step title="Audio generation">
+    Faseeh generates Arabic audio and returns it as raw PCM data
+  </Step>
+
+  <Step title="Real-time playback">
+    VAPI streams the audio to the caller in real-time
+  </Step>
+</Steps>
+
+## Authentication Setup
+
+VAPI needs secure communication with your Faseeh TTS endpoint. Use **Custom Credentials** for authentication:
+
+### Using Custom Credentials (Recommended)
+
+Create authentication credentials in the VAPI dashboard and reference them by ID:
+
+<CodeBlocks>
+  ```json title="Assistant Configuration with Custom Credentials"
+  {
+    "voice": {
+      "provider": "custom-voice",
+      "server": {
+        "url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2/0.7",
+        "credentialId": "d4a3a362-fe82-4255-b475-f30eefe8e75c",
+        "timeoutSeconds": 30
+      }
+    }
+  }
+  ```
+</CodeBlocks>
+
+<Note>
+  Create [Custom Credentials](https://docs.vapi.ai/server-url/server-authentication) in the VAPI dashboard for better security and credential management. Use your Faseeh API key as the credential value.
+</Note>
+
+## URL Structure
+
+The Faseeh TTS endpoint URL follows this structure:
+
+```
+https://api.faseeh.ai/api/v1/integrations/vapi/{model_id}/{voice_id}/{similarity}
+```
+
+### URL Parameters
+
+| Parameter   | Type   | Description                                                                     | Example            |
+| ---------- | ------ | ------------------------------------------------------------------------------- | ------------------ |
+| `model_id` | string | The Faseeh model to use (e.g., `faseeh-v1-preview` or `faseeh-mini-v1-preview`) | `faseeh-v1-preview` |
+| `voice_id` | string | The Arabic voice identifier (e.g., `ar-najdi-male-2`, `ar-uae-female-1`)       | `ar-najdi-male-2`  |
+| `similarity` | number | Voice similarity/stability (0.0 - 1.0, typically 0.5 - 0.9)                    | `0.7`              |
+
+### Example URLs
+
+```json
+// Full model with Najdi male voice
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2/0.7"
+
+// Mini model with UAE female voice
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-mini-v1-preview/ar-uae-female-1/0.8"
+
+// Full model with Hijazi male voice
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-hijazi-male-1/0.75"
+```
+
+## Complete Assistant Configuration
+
+Here's a complete example of configuring your VAPI assistant with Faseeh TTS:
+
+<CodeBlocks>
+  ```json title="Complete Assistant Configuration"
+  {
+    "name": "Faseeh Assistant 2",
+    "voice": {
+      "provider": "custom-voice",
+      "server": {
+        "url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2/0.7",
+        "credentialId": "d4a3a362-fe82-4255-b475-f30eefe8e75c",
+        "timeoutSeconds": 30
+      },
+      "fallbackPlan": {
+        "voices": [
+          {
+            "provider": "eleven-labs",
+            "voiceId": "21m00Tcm4TlvDq8ikWAM"
+          }
+        ]
+      }
+    }
+  }
+  ```
+</CodeBlocks>
+
+## Request and Response Formats
+
+### VAPI Request Structure
+
+Every TTS request from VAPI follows this format:
+
+<CodeBlocks>
+  ```json title="VAPI TTS Request"
+  {
+    "message": {
+      "type": "voice-request",
+      "text": "مرحباً، كيف يمكنني مساعدتك اليوم؟",
+      "sampleRate": 24000,
+      "timestamp": 1677123456789,
+      "call": {
+        "id": "call-123",
+        "orgId": "org-456"
+      },
+      "assistant": {
+        "id": "assistant-789",
+        "name": "Faseeh Assistant"
+      },
+      "customer": {
+        "number": "+1234567890"
+      }
+    }
+  }
+  ```
+</CodeBlocks>
+
+### Required Fields
+
+| Field        | Type   | Description                                                |
+| ------------ | ------ | ---------------------------------------------------------- |
+| `type`       | string | Always "voice-request"                                     |
+| `text`       | string | Text to synthesize (supports Arabic and mixed content)     |
+| `sampleRate` | number | Target audio sample rate (8000, 16000, 22050, or 24000 Hz) |
+| `timestamp`  | number | Unix timestamp in milliseconds                             |
+
+### Response Format
+
+Faseeh's endpoint automatically returns:
+
+* **HTTP 200 status**
+* **Content-Type: application/octet-stream**
+* **Raw PCM audio data** in the response body
+
+<CodeBlocks>
+  ```http title="Correct Response Headers"
+  HTTP/1.1 200 OK
+  Content-Type: application/octet-stream
+  Transfer-Encoding: chunked
+
+  [Raw PCM audio bytes]
+
+  ```
+</CodeBlocks>
+
+## Audio Format Requirements
+
+Faseeh automatically generates audio with these exact specifications:
+
+* **Format:** Raw PCM (no headers or containers)
+* **Channels:** 1 (mono only)
+* **Bit Depth:** 16-bit signed integer
+* **Byte Order:** Little-endian
+* **Sample Rate:** Matches the `sampleRate` in the request
+
+<Warning>
+  Faseeh handles all audio format requirements automatically. No additional configuration needed.
+</Warning>
+
+## Choosing Your Voice
+
+### Available Voice IDs
+
+To choose a voice for your assistant:
+
+1. Visit the [Faseeh Voice Gallery](https://app.faseeh.ai/en/voices)
+2. Listen to different voices to find the one that best fits your use case
+3. Note the voice ID (e.g., `ar-najdi-male-2`, `ar-uae-female-1`)
+4. Use that voice ID in your URL
+
+### Model Selection
+
+Choose between two models based on your needs:
+
+```json
+// Full model - Best quality, slightly higher latency
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/{voice_id}/{similarity}"
+
+// Mini model - Faster, lower latency, good quality
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-mini-v1-preview/{voice_id}/{similarity}"
+```
+
+### Similarity Parameter
+
+The `similarity` parameter controls voice consistency:
+
+- **0.0 - 0.4**: More expressive, creative, but can vary more
+- **0.5 - 0.7**: Balanced (recommended for most use cases)
+- **0.8 - 1.0**: Very consistent, less variation
+
+```json
+// Dynamic voice - More expressive
+"url": ".../{voice_id}/0.4"
+
+// Consistent voice - Professional applications
+"url": ".../{voice_id}/0.9"
+```
+
+## Testing Your Integration
+
+### Create a Test Call
+
+Use VAPI's API to create a test call that exercises your Faseeh TTS system:
+
+<CodeBlocks>
+  ```javascript title="Test Call Creation"
+  async function testFaseehWithVAPICall() {
+    const vapiApiKey = 'your-vapi-api-key';
+    const assistantId = 'your-assistant-id'; // Assistant with Faseeh TTS
+
+    const callData = {
+      assistant: { id: assistantId },
+      phoneNumberId: 'your-phone-number-id',
+      customer: { number: '+1234567890' }, // Your test number
+    };
+
+    try {
+      const response = await fetch('https://api.vapi.ai/call', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${vapiApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(callData),
+      });
+
+      const call = await response.json();
+      console.log('Test call created:', call.id);
+      return call;
+    } catch (error) {
+      console.error('Failed to create test call:', error);
+    }
+  }
+  ```
+</CodeBlocks>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Request timeouts">
+    **Symptoms:** VAPI doesn't receive your audio response, calls may drop
+
+    **Common causes:**
+
+    * Network connectivity issues between VAPI and Faseeh API
+    * TTS processing takes longer than configured timeout
+    * Server overload
+
+    **Solutions:**
+
+    * Increase `timeoutSeconds` in your assistant configuration (default: 30)
+    * Use `faseeh-mini-v1-preview` for faster processing
+    * Check your network connection and Faseeh API status
+  </Accordion>
+
+  <Accordion title="Audio playback problems">
+    **Symptoms:** No audio during calls, or distorted/garbled sound
+
+    **Common causes:**
+
+    * Incorrect URL format or parameters
+    * Invalid voice ID
+    * Authentication issues
+
+    **Solutions:**
+
+    * Verify the URL structure matches: `/vapi/{model_id}/{voice_id}/{similarity}`
+    * Check that the voice ID exists in Faseeh's voice gallery
+    * Ensure your credential ID is correct and contains a valid Faseeh API key
+  </Accordion>
+
+  <Accordion title="Authentication failures">
+    **Symptoms:** 401 Unauthorized responses
+
+    **Common causes:**
+
+    * Invalid Faseeh API key in custom credentials
+    * Missing or incorrect credential ID
+    * API key expired or revoked
+
+    **Solutions:**
+
+    * Verify your Faseeh API key is valid at [app.faseeh.ai](https://app.faseeh.ai)
+    * Check that the credential ID matches your VAPI dashboard configuration
+    * Regenerate your API key if needed
+  </Accordion>
+
+  <Accordion title="High latency">
+    **Symptoms:** Noticeable delays during conversations
+
+    **Common causes:**
+
+    * Using full model instead of mini model
+    * Network latency between services
+    * High similarity values requiring more processing
+
+    **Solutions:**
+
+    * Switch to `faseeh-mini-v1-preview` for lower latency
+    * Reduce similarity value (e.g., from 0.9 to 0.7)
+    * Consider geographic proximity of services
+  </Accordion>
+
+  <Accordion title="Invalid voice ID">
+    **Symptoms:** 404 Not Found or invalid voice errors
+
+    **Common causes:**
+
+    * Typo in voice ID
+    * Voice ID doesn't exist
+    * Wrong model/voice combination
+
+    **Solutions:**
+
+    * Visit [Faseeh Voice Gallery](https://app.faseeh.ai/en/voices) to verify voice IDs
+    * Ensure voice ID matches exactly (case-sensitive)
+    * Check that the voice is available for your selected model
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+### 1. API Key Security
+
+✅ **DO:**
+
+- Store API keys in VAPI Custom Credentials (not in code)
+- Use different credentials for development and production
+- Rotate keys periodically
+
+❌ **DON'T:**
+
+- Hardcode API keys in assistant configuration
+- Share API keys in chat or email
+- Use the same key across multiple environments
+
+### 2. Similarity Settings
+
+- **Customer Service**: 0.7 - 0.8 (balanced and reliable)
+- **Professional Applications**: 0.8 - 0.9 (very consistent)
+- **Creative Content**: 0.5 - 0.6 (more expressive)
+
+### 3. Fallback Configuration
+
+Always configure a fallback voice provider to ensure call continuity:
+
+```json
+{
+  "voice": {
+    "provider": "custom-voice",
+    "server": {
+      "url": "https://api.faseeh.ai/api/v1/integrations/vapi/...",
+      "credentialId": "...",
+      "timeoutSeconds": 30
+    },
+    "fallbackPlan": {
+      "voices": [
+        {
+          "provider": "eleven-labs",
+          "voiceId": "21m00Tcm4TlvDq8ikWAM"
+        }
+      ]
+    }
+  }
+}
+```
+
+## Next Steps
+
+Now that you have Faseeh TTS integration working:
+
+* **Explore Voices**: Try different Arabic voices from the [Voice Gallery](https://app.faseeh.ai/en/voices)
+* **Optimize Performance**: Test both full and mini models to find the right balance
+* **Multi-language Support**: Combine Faseeh for Arabic with other providers for English
+* **Monitor Usage**: Track your API usage in the [Faseeh Dashboard](https://app.faseeh.ai)
+
+<Tip>
+  Consider implementing a fallback voice provider in your assistant configuration to ensure call continuity if your Faseeh TTS endpoint experiences issues.
+</Tip>
+
+## Support
+
+Need help?
+
+- **Faseeh Support**: [Schedule a Meeting](https://www.actualize.pro/schedule)
+- **VAPI Support**: [VAPI Documentation](https://docs.vapi.ai)
+- **Voice Gallery**: [Browse Available Voices](https://app.faseeh.ai/en/voices)
+
