@@ -68,7 +68,7 @@ Create authentication credentials in the VAPI dashboard and reference them by ID
     "voice": {
       "provider": "custom-voice",
       "server": {
-        "url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2/0.7",
+        "url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2?similarity=0.7",
         "credentialId": "d4a3a362-fe82-4255-b475-f30eefe8e75c",
         "timeoutSeconds": 30
       }
@@ -86,7 +86,7 @@ Create authentication credentials in the VAPI dashboard and reference them by ID
 The Faseeh TTS endpoint URL follows this structure:
 
 ```
-https://api.faseeh.ai/api/v1/integrations/vapi/{model_id}/{voice_id}/{similarity}
+https://api.faseeh.ai/api/v1/integrations/vapi/{model_id}/{voice_id}?similarity={similarity}
 ```
 
 ### URL Parameters
@@ -101,13 +101,13 @@ https://api.faseeh.ai/api/v1/integrations/vapi/{model_id}/{voice_id}/{similarity
 
 ```json
 // Full model with Najdi male voice
-"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2/0.7"
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2?similarity=0.7"
 
 // Mini model with UAE female voice
-"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-mini-v1-preview/ar-uae-female-1/0.8"
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-mini-v1-preview/ar-uae-female-1?similarity=0.8"
 
 // Full model with Hijazi male voice
-"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-hijazi-male-1/0.75"
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-hijazi-male-1?similarity=0.75"
 ```
 
 ## Complete Assistant Configuration
@@ -121,7 +121,7 @@ Here's a complete example of configuring your VAPI assistant with Faseeh TTS:
     "voice": {
       "provider": "custom-voice",
       "server": {
-        "url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2/0.7",
+        "url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/ar-najdi-male-2?similarity=0.7",
         "credentialId": "d4a3a362-fe82-4255-b475-f30eefe8e75c",
         "timeoutSeconds": 30
       },
@@ -227,10 +227,10 @@ Choose between two models based on your needs:
 
 ```json
 // Full model - Best quality, slightly higher latency
-"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/{voice_id}/{similarity}"
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-v1-preview/{voice_id}?similarity={similarity}"
 
 // Mini model - Faster, lower latency, good quality
-"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-mini-v1-preview/{voice_id}/{similarity}"
+"url": "https://api.faseeh.ai/api/v1/integrations/vapi/faseeh-mini-v1-preview/{voice_id}?similarity={similarity}"
 ```
 
 ### Similarity Parameter
@@ -243,10 +243,10 @@ The `similarity` parameter controls voice consistency:
 
 ```json
 // Dynamic voice - More expressive
-"url": ".../{voice_id}/0.4"
+"url": ".../{voice_id}?similarity=0.4"
 
 // Consistent voice - Professional applications
-"url": ".../{voice_id}/0.9"
+"url": ".../{voice_id}?similarity=0.9"
 ```
 
 ## Testing Your Integration
@@ -317,7 +317,7 @@ Use VAPI's API to create a test call that exercises your Faseeh TTS system:
 
     **Solutions:**
 
-    * Verify the URL structure matches: `/vapi/{model_id}/{voice_id}/{similarity}`
+    * Verify the URL structure matches: `/vapi/{model_id}/{voice_id}?similarity={similarity}`
     * Check that the voice ID exists in Faseeh's voice gallery
     * Ensure your credential ID is correct and contains a valid Faseeh API key
   </Accordion>
