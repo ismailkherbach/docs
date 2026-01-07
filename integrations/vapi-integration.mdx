@@ -58,9 +58,60 @@ VAPI's custom TTS system operates through a webhook pattern:
 
 VAPI needs secure communication with your Faseeh TTS endpoint. Use **Custom Credentials** for authentication:
 
-### Using Custom Credentials (Recommended)
+### Getting Your Credential ID
 
-Create authentication credentials in the VAPI dashboard and reference them by ID:
+To use Faseeh TTS with VAPI, you need to create a Server Configuration in the VAPI dashboard. Follow these steps:
+
+<Steps>
+  <Step title="Create a Faseeh API Key">
+    First, create an API key in your Faseeh dashboard:
+    
+    1. Navigate to the [Faseeh API Keys page](https://app.faseeh.ai/en/api-keys)
+    2. Click **"Generate New API Key"** or **"Create API Key"**
+    3. Give your key a descriptive name (e.g., "VAPI Integration")
+    4. Copy the API key immediately - you'll need it in the next step
+    
+    <Warning>
+      Your API key will only be displayed once. Make sure to copy it securely before closing the dialog.
+    </Warning>
+  </Step>
+
+  <Step title="Create Server Configuration in VAPI">
+    Now, create a Server Configuration in the VAPI dashboard:
+    
+    1. Go to [VAPI Custom Credentials](https://dashboard.vapi.ai/settings/integrations/custom-credential)
+    2. Click **"Create New Server Configuration"** or **"Add Configuration"**
+    3. Fill in the configuration details:
+       - **Name**: Give it a descriptive name (e.g., "Faseeh TTS")
+       - **Authentication Type**: Select **"Bearer Token"**
+       - **Token**: Paste your Faseeh API key from Step 1
+       - **Include Bearer**: **Disable** this toggle (turn it OFF)
+       - **Header Name**: Set to **`x-api-key`**
+    4. Click **"Save"** or **"Create"** to save the configuration
+    
+    <img 
+      src="https://pub-a2eeb500293c41df9e06b82b4178468a.r2.dev/images/Screenshot%202026-01-07%20at%208.41.32%E2%80%AFPM.png"
+      alt="VAPI Server Configuration settings showing Bearer Token authentication with x-api-key header"
+      style={{ borderRadius: '0.5rem', maxWidth: '400px', height: 'auto' }}
+    />
+  </Step>
+
+  <Step title="Copy Your Credential ID">
+    After creating the Server Configuration:
+    
+    1. You'll see your new configuration listed in the VAPI dashboard
+    2. Find the **Credential ID** (it will be a UUID like `d4a3a362-fe82-4255-b475-f30eefe8e75c`)
+    3. Copy this Credential ID - you'll use it in your assistant configuration
+    
+    <Tip>
+      The Credential ID is usually displayed next to the configuration name or in a details view. You can also find it in the URL when viewing the configuration details.
+    </Tip>
+  </Step>
+</Steps>
+
+### Using Custom Credentials in Your Assistant
+
+Once you have your Credential ID, use it in your assistant configuration:
 
 <CodeBlocks>
   ```json title="Assistant Configuration with Custom Credentials"
@@ -78,7 +129,7 @@ Create authentication credentials in the VAPI dashboard and reference them by ID
 </CodeBlocks>
 
 <Note>
-  Create [Custom Credentials](https://docs.vapi.ai/server-url/server-authentication) in the VAPI dashboard for better security and credential management. Use your Faseeh API key as the credential value.
+  Replace `d4a3a362-fe82-4255-b475-f30eefe8e75c` with your actual Credential ID from the VAPI dashboard.
 </Note>
 
 ## URL Structure
